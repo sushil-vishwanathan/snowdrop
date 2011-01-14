@@ -2,7 +2,7 @@
     <parent>
         <groupId>org.jboss.snowdrop</groupId>
         <artifactId>snowdrop-parent</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
+        <version>1.2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.jboss.snowdrop</groupId>
@@ -13,7 +13,7 @@
     <description>Snowdrop Distribution</description>
 
     <properties>
-        <deployer.version>3.3</deployer.version>
+        <deployer.version>3.4</deployer.version>
     </properties>
 
     <profiles>
