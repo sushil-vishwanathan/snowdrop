@@ -35,5 +35,6 @@ public class JBossNamespaceHandler extends NamespaceHandlerSupport
    {
       registerBeanDefinitionParser("mbean-server", new MBeanServerBeanDefinitionParser());
       registerBeanDefinitionParser("resource-adapter", new JBossJcaResourceAdapterParser());
+      registerBeanDefinitionParser("activation-spec-factory", new JBossActivationSpecBeanDefinitionParser());
    }
 }

@@ -45,4 +45,10 @@
        </xsd:complexType>
     </xsd:element>
 
+    <xsd:element name="activation-spec-factory">
+       <xsd:complexType>
+           <xsd:attribute name="id" type="xsd:string" use="optional"/>
+       </xsd:complexType>
+    </xsd:element>
+
 </xsd:schema>
