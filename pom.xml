@@ -26,7 +26,8 @@
     <module>vfs</module>
     <module>weaving</module>
     <module>build</module>
-    <module>deployer-assembly</module>    
+    <module>deployer-assembly</module>
+      <module>context-support</module>
   </modules>
 
   <properties>
@@ -49,7 +50,7 @@
     <version.javaee>3.0.0.GA</version.javaee>
     <version.xerces>2.9.1</version.xerces>
     <version.aopalliance>1.0</version.aopalliance>
-    <version.spring>3.0.2.RELEASE</version.spring>
+    <version.spring>2.5.6.SEC02</version.spring>
   </properties>
 
   <build>
