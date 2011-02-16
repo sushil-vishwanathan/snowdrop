@@ -217,6 +217,76 @@
     </section>
 
     <section>
+      <title>The JBoss custom namespace</title>
+
+      <para>Starting with version 1.2, Snowdrop includes a custom Spring
+      namespace for JBoss AS. The goals of this custom namespace is to
+      simplify the development of Spring applications that run on JBoss, by
+      reducing the amount of proprietary code and improving
+      portability.</para>
+
+      <para>The amount of proprietary code is reduced because of replacing
+      bean definitions that include references to specific JBoss classes with
+      namespace-based constructs. All the knowledge about the proprietary
+      classes is encapsulated in the namespace handlers. </para>
+
+      <para>The applications are more portable because certain proprietary
+      classes may change when upgrading to a different version of the
+      application server. In such cases, the runtime will be detected
+      automatically by Snowdrop which will set up beans using the classes that
+      are appropriate for that specific runtime. </para>
+
+      <para>The custom namespace can be set up as follows:</para>
+
+      <programlisting>&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:jboss="http://www.jboss.org/schema/spring"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.jboss.org/schema/spring http://www.jboss.org/schema/spring.xsd"&gt;
+</programlisting>
+
+      <section>
+        <title>Accessing the default JBoss MBean Server</title>
+
+        <para>The default MBean server of JBoss AS can be accessed as
+        follows:<programlisting>&lt;jb &lt;jms:jca-listener-container resource-adapter="resourceAdapter" acknowledge="auto"
+                                activation-spec-factory="activationSpecFactory"&gt;
+        &lt;jms:listener destination="/queue/sportsclub" ref="paymentNotificationProcessor"
+                      method="processPaymentNotification"/&gt;
+    &lt;/jms:jca-listener-container&gt;oss:mbean-server/&gt;</programlisting>The
+        bean will be installed with the default id 'mbeanServer'. If
+        necessary, developers can specify a different bean name:</para>
+
+        <para><programlisting>&lt;jboss:mbean-server id="customName"/&gt;</programlisting></para>
+      </section>
+
+      <section>
+        <title>JCA/JMS support beans </title>
+
+        <para>Spring JMS message listeners (including message-driven POJOs)
+        can use a JCA-based MessageListenerContainer. The configuration of a
+        JCA-based listener container in Spring requires the setup of a number
+        of beans based on application-server specific classes. Using the JBoss
+        custom namespace, the ResourceAdapter and ActivationSpec configuration
+        can be set up as follows:</para>
+
+        <programlisting>    &lt;jboss:activation-spec-factory id="activationSpecFactory" subscriptionName="jca-example" useDLQ="false"/&gt;
+
+    &lt;jboss:resource-adapter id="resourceAdapter"/&gt;
+</programlisting>
+
+        <para>which can be further used in a JCA message listener
+        configuration:</para>
+
+        <programlisting> &lt;jms:jca-listener-container resource-adapter="resourceAdapter" acknowledge="auto"
+                                activation-spec-factory="activationSpecFactory"&gt;
+        &lt;jms:listener destination="/someDestination" ref="messageDrivenPojo"
+                      method="pojoHandlerMethod"/&gt;
+    &lt;/jms:jca-listener-container&gt;</programlisting>
+      </section>
+    </section>
+
+    <section>
       <title>Load-time weaving</title>
 
       <note>
