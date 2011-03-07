@@ -23,11 +23,11 @@
     <module>cluster</module>
     <module>deployers</module>
     <module>facade</module>
+    <module>namespace</module>
     <module>vfs</module>
     <module>weaving</module>
     <module>build</module>
     <module>deployer-assembly</module>
-      <module>context-support</module>
   </modules>
 
   <properties>
