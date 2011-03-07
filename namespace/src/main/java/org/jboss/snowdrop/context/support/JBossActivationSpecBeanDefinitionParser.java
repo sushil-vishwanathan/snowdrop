@@ -24,11 +24,14 @@ package org.jboss.snowdrop.context.support;
 
 import java.util.Properties;
 
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -36,9 +39,37 @@ import org.w3c.dom.Element;
  */
 public class JBossActivationSpecBeanDefinitionParser extends AbstractBeanDefinitionParser
 {
-   private static final String DEFAULT_ID="jbossActivationSpecFactory";
 
-   private static String DEFAULT_JMS_ACTIVATION_SPEC_FACTORY_CLASS_NAME = "org.springframework.jms.listener.endpoint.DefaultJmsActivationSpecFactory";
+   private static final String DEFAULT_ACTIVATION_SPEC_FACTORY_CLASS_NAME = "org.springframework.jms.listener.endpoint.DefaultJmsActivationSpecFactory";
+
+   private static final String JBM_ACTIVATION_SPEC_CLASS_NAME = "org.jboss.resource.adapter.jms.inflow.JmsActivationSpec";
+
+   private static final String HORNETQ_ACTIVATION_SPEC_CLASS_NAME = "org.hornetq.ra.inflow.HornetQActivationSpec";
+
+   private static final String[] ACTIVATION_SPEC_CLASSNAME_CANDIDATES = new String[]{HORNETQ_ACTIVATION_SPEC_CLASS_NAME, JBM_ACTIVATION_SPEC_CLASS_NAME};
+
+   private static final String USE_DEAD_LETTER_QUEUE_ATTRIBUTE_NAME = "use-dead-letter-queue";
+
+   private static final String SNOWDROP_JCA_PROCESSOR_DEFAULT_SUBSCRIPTION_NAME = "snowdrop-jca-processor";
+
+   private static final String CLIENT_ID_ATTRIBUTE_NAME = "client-id";
+
+   private static final String CLASS_ATTRIBUTE_NAME = "class";
+
+   private static final String DEFAULT_CLIENT_ID = "snowdrop-remote-client";
+
+   private static final String SUBSCRIPTION_NAME_ATTRIBUTE_NAME = "subscription-name";
+
+   private static final String ACTIVATION_SPEC_CLASS_PROPERTY = "activationSpecClass";
+
+   private static final String CLIENT_ID_PROPERTY_NAME = "clientId";
+
+   private static final String SUBSCRIPTION_NAME_PROPERTY_NAME = "subscriptionName";
+
+   private static final String USE_DLQ_PROPERTY_NAME = "useDLQ";
+
+   private static final String DEFAULT_PROPERTIES_PROPERTY_NAME = "defaultProperties";
+
 
    @Override
    protected String resolveId(Element element, AbstractBeanDefinition definition, ParserContext parserContext) throws BeanDefinitionStoreException
@@ -49,18 +80,42 @@ public class JBossActivationSpecBeanDefinitionParser extends AbstractBeanDefinit
    @Override
    protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext)
    {
-      BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(DEFAULT_JMS_ACTIVATION_SPEC_FACTORY_CLASS_NAME);
-      beanDefinitionBuilder.addPropertyValue("activationSpecClass", getJBossActivationSpecClass());
+      String useDlq = element.getAttribute(USE_DEAD_LETTER_QUEUE_ATTRIBUTE_NAME);
+      String subscriptionName = element.getAttribute(SUBSCRIPTION_NAME_ATTRIBUTE_NAME);
+      String clientId = element.getAttribute(CLIENT_ID_ATTRIBUTE_NAME);
+      String activationSpecClassName = element.getAttribute(CLASS_ATTRIBUTE_NAME);
+
+      BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.rootBeanDefinition(DEFAULT_ACTIVATION_SPEC_FACTORY_CLASS_NAME);
+      beanDefinitionBuilder.addPropertyValue(ACTIVATION_SPEC_CLASS_PROPERTY, StringUtils.hasText(activationSpecClassName) ? activationSpecClassName : detectJBossActivationSpecClass(parserContext));
       Properties properties = new Properties();
-      properties.setProperty("clientId", "remote");
-      properties.setProperty("subscriptionName", "jca-processor");
-      properties.setProperty("useDLQ", "false");
-      beanDefinitionBuilder.addPropertyValue("defaultProperties", properties);
+      properties.setProperty(CLIENT_ID_PROPERTY_NAME, StringUtils.hasText(clientId) ? clientId : DEFAULT_CLIENT_ID);
+      properties.setProperty(SUBSCRIPTION_NAME_PROPERTY_NAME, StringUtils.hasText(subscriptionName) ? subscriptionName : SNOWDROP_JCA_PROCESSOR_DEFAULT_SUBSCRIPTION_NAME);
+      properties.setProperty(USE_DLQ_PROPERTY_NAME, StringUtils.hasText(useDlq) ? useDlq : "false");
+      beanDefinitionBuilder.addPropertyValue(DEFAULT_PROPERTIES_PROPERTY_NAME, properties);
+
       return beanDefinitionBuilder.getBeanDefinition();
    }
 
-   private String getJBossActivationSpecClass()
+   private String detectJBossActivationSpecClass(ParserContext parserContext)
    {
-      return "org.jboss.resource.adapter.jms.inflow.JmsActivationSpec";
+      ClassLoader classLoader = parserContext.getReaderContext().getBeanClassLoader();
+      if (classLoader == null)
+      {
+         classLoader = ClassUtils.getDefaultClassLoader();
+      }
+      for (String activationSpecClassNameCandidate : ACTIVATION_SPEC_CLASSNAME_CANDIDATES)
+      {
+         try
+         {
+            classLoader.loadClass(activationSpecClassNameCandidate);
+            return activationSpecClassNameCandidate;
+         }
+         catch (ClassNotFoundException e)
+         {
+            // ignore
+         }
+      }
+
+      throw new BeanCreationException("Cannot find a suitable ActivationSpec class on the classpath");
    }
 }

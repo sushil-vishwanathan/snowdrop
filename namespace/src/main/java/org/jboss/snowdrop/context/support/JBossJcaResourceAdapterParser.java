@@ -45,6 +45,8 @@ public class JBossJcaResourceAdapterParser  extends AbstractBeanDefinitionParser
 
    private static final String DEFAULT_JCA_MBEAN_NAME = "jboss.jca:name='jms-ra.rar',service=RARDeployment";
 
+   private static final String FACTORY_METHOD_NAME = "getAttribute";
+
    @Override
    protected boolean shouldGenerateIdAsFallback()
    {
@@ -56,7 +58,7 @@ public class JBossJcaResourceAdapterParser  extends AbstractBeanDefinitionParser
    {
       BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition();
       builder.getRawBeanDefinition().setFactoryBeanName(DEFAULT_JBOSS_MBEAN_SERVER_BEAN_NAME);
-      builder.getRawBeanDefinition().setFactoryMethodName("getAttribute");
+      builder.getRawBeanDefinition().setFactoryMethodName(FACTORY_METHOD_NAME);
       try
       {
          builder.addConstructorArgValue(ObjectName.getInstance(DEFAULT_JCA_MBEAN_NAME));
