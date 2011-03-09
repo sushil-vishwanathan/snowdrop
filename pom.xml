@@ -76,6 +76,7 @@
                 <configuration>
                     <generateReleasePoms>false</generateReleasePoms>
                     <pushChanges>false</pushChanges>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
         </plugins>
