@@ -192,7 +192,7 @@ at org.springframework.core.io.support.PathMatchingResourcePatternResolver
                                 activation-spec-factory="activationSpecFactory"&gt;
         &lt;jms:listener destination="/queue/sportsclub" ref="paymentNotificationProcessor"
                       method="processPaymentNotification"/&gt;
-    &lt;/jms:jca-listener-container&gt;oss:mbean-server/&gt;</programlisting>The
+    &lt;/jms:jca-listener-container&gt;jboss:mbean-server/&gt;</programlisting>The
         bean will be installed with the default id 'mbeanServer'. If
         necessary, developers can specify a different bean name:</para>
 
