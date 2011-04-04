@@ -19,9 +19,9 @@
   ~ Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
-<xsd:schema xmlns="http://www.jboss.org/schema/spring"
+<xsd:schema xmlns="http://www.jboss.org/schema/snowdrop"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            targetNamespace="http://www.jboss.org/schema/spring">
+            targetNamespace="http://www.jboss.org/schema/snowdrop">
 
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
 
