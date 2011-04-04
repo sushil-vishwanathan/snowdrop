@@ -1,1 +1,1 @@
-http\://www.jboss.org/schema/spring=org.jboss.snowdrop.context.support.JBossNamespaceHandler
+http\://www.jboss.org/schema/snowdrop=org.jboss.snowdrop.context.support.JBossNamespaceHandler

@@ -1,1 +1,1 @@
-http\://www.jboss.org/schema/spring.xsd=org/jboss/snowdrop/context/support/jboss-spring.xsd
+http\://www.jboss.org/schema/snowdrop/snowdrop.xsd=org/jboss/snowdrop/context/support/snowdrop-1.2.xsd
