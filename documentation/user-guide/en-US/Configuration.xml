@@ -181,18 +181,14 @@ at org.springframework.core.io.support.PathMatchingResourcePatternResolver
        xmlns:jboss="http://www.jboss.org/schema/spring"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.jboss.org/schema/spring http://www.jboss.org/schema/spring.xsd"&gt;
+       http://www.jboss.org/schema/snowdrop http://www.jboss.org/schema/snowdrop/snowdrop.xsd"&gt;
 </programlisting>
 
       <section>
         <title>Accessing the default JBoss MBean Server</title>
 
         <para>The default MBean server of JBoss AS can be accessed as
-        follows:<programlisting language="XML">&lt;jb &lt;jms:jca-listener-container resource-adapter="resourceAdapter" acknowledge="auto"
-                                activation-spec-factory="activationSpecFactory"&gt;
-        &lt;jms:listener destination="/queue/sportsclub" ref="paymentNotificationProcessor"
-                      method="processPaymentNotification"/&gt;
-    &lt;/jms:jca-listener-container&gt;jboss:mbean-server/&gt;</programlisting>The
+        follows:<programlisting language="XML">&lt;jboss:mbean-server/&gt;</programlisting>The
         bean will be installed with the default id 'mbeanServer'. If
         necessary, developers can specify a different bean name:</para>
 
