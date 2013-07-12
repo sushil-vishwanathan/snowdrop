@@ -32,6 +32,9 @@ public class CustomClassPathBeanDefinitionScanner extends ClassPathBeanDefinitio
     @Override
     public Set<BeanDefinition> findCandidateComponents(String basePackage)  {
         Index index = SpringDeployment.index;
+        if (index == null){
+            return super.findCandidateComponents(basePackage);
+        }
         List<ClassInfo> componentClasses = new ArrayList<ClassInfo>();
 
         List<AnnotationInstance> instances = getComponentClasses(index);
