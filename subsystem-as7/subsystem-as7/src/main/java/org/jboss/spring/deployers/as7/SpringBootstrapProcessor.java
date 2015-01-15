@@ -78,21 +78,23 @@ public class SpringBootstrapProcessor implements DeploymentUnitProcessor {
             ServiceName serviceName = phaseContext.getDeploymentUnit().getServiceName().append(applicationContext.getName());
             ServiceBuilder<?> serviceBuilder = serviceTarget.addService(serviceName, service);
             serviceBuilder.install();
-            String jndiName = JndiName.of("java:jboss").append(applicationContext.getName()).getAbsoluteName();
-            int index = jndiName.indexOf("/");
-            String namespace = (index > 5) ? jndiName.substring(5, index) : null;
-            String binding = (index > 5) ? jndiName.substring(index + 1) : jndiName.substring(5);
-            ServiceName naming = (namespace != null) ? ContextNames.JAVA_CONTEXT_SERVICE_NAME.append(namespace) : ContextNames.JAVA_CONTEXT_SERVICE_NAME;
-            ServiceName bindingName = naming.append(binding);
-            BinderService binder = new BinderService(binding);
-            InjectedValue<ApplicationContext> injectedValue = new InjectedValue<ApplicationContext>();
-            final ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(jndiName);
-            serviceTarget.addService(bindingName, binder)
-                    .addAliases(ContextNames.JAVA_CONTEXT_SERVICE_NAME.append(jndiName))
-                    .addInjection(binder.getManagedObjectInjector(), new ValueManagedReferenceFactory(injectedValue))
-                    .addDependency(serviceName, ApplicationContext.class, injectedValue)
-                    .addDependency(bindInfo.getParentContextServiceName(), ServiceBasedNamingStore.class, binder.getNamingStoreInjector())
-                    .install();
+            if (applicationContext.getJndiName() != null) {
+              String jndiName = JndiName.of("java:jboss").append(applicationContext.getName()).getAbsoluteName();
+              int index = jndiName.indexOf("/");
+              String namespace = (index > 5) ? jndiName.substring(5, index) : null;
+              String binding = (index > 5) ? jndiName.substring(index + 1) : jndiName.substring(5);
+              ServiceName naming = (namespace != null) ? ContextNames.JAVA_CONTEXT_SERVICE_NAME.append(namespace) : ContextNames.JAVA_CONTEXT_SERVICE_NAME;
+              ServiceName bindingName = naming.append(binding);
+              BinderService binder = new BinderService(binding);
+              InjectedValue<ApplicationContext> injectedValue = new InjectedValue<ApplicationContext>();
+              final ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(jndiName);
+              serviceTarget.addService(bindingName, binder)
+                      .addAliases(ContextNames.JAVA_CONTEXT_SERVICE_NAME.append(jndiName))
+                      .addInjection(binder.getManagedObjectInjector(), new ValueManagedReferenceFactory(injectedValue))
+                      .addDependency(serviceName, ApplicationContext.class, injectedValue)
+                      .addDependency(bindInfo.getParentContextServiceName(), ServiceBasedNamingStore.class, binder.getNamingStoreInjector())
+                      .install();
+            }
         }
     }
 

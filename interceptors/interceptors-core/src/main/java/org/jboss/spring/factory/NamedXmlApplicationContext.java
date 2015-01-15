@@ -82,6 +82,10 @@ public class NamedXmlApplicationContext extends VFSClassPathXmlApplicationContex
         }
         return name;
     }
+    
+    public String getJndiName() {
+      return this.name;
+    }
 
     private void initializeNames(Resource resource) {
         try {
@@ -114,6 +118,9 @@ public class NamedXmlApplicationContext extends VFSClassPathXmlApplicationContex
                 if (pbfm.find()) {
                     String parentName = pbfm.group(1);
                     try {
+                        if (!parentName.startsWith("java:jboss/")) {
+                          parentName = "java:jboss/" + parentName;
+                        }
                         this.getBeanFactory().setParentBeanFactory((BeanFactory) Util.lookup(parentName, BeanFactory.class));
                     } catch (Exception e) {
                         throw new BeanDefinitionStoreException("Failure during parent bean factory JNDI lookup: " + parentName, e);

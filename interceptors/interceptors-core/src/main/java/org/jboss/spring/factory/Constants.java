@@ -25,7 +25,7 @@ package org.jboss.spring.factory;
  * @author Marius Bogoevici
  */
 public class Constants {
-    public static final String BEAN_FACTORY_ELEMENT = "BeanFactory=\\(([^)]+)\\)";
+    public static final String BEAN_FACTORY_ELEMENT = "^BeanFactory=\\(([^)]+)\\)";
     public static final String PARENT_BEAN_FACTORY_ELEMENT = "ParentBeanFactory=\\(([^)]+)\\)";
     public static final String INSTANTIATION_ELEMENT = "Instantiate=\\(([^)]+)\\)";
 }
