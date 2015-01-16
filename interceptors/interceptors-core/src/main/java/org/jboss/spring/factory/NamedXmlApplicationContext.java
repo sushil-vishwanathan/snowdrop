@@ -27,6 +27,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.xml.sax.InputSource;
@@ -121,7 +122,8 @@ public class NamedXmlApplicationContext extends VFSClassPathXmlApplicationContex
                         if (!parentName.startsWith("java:jboss/")) {
                           parentName = "java:jboss/" + parentName;
                         }
-                        this.getBeanFactory().setParentBeanFactory((BeanFactory) Util.lookup(parentName, BeanFactory.class));
+                        ApplicationContext parentContext = (ApplicationContext) Util.lookup(parentName, BeanFactory.class);
+                        setParent(parentContext);
                     } catch (Exception e) {
                         throw new BeanDefinitionStoreException("Failure during parent bean factory JNDI lookup: " + parentName, e);
                     }
